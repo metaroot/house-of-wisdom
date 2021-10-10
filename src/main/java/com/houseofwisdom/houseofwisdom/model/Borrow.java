@@ -12,10 +12,13 @@ public class Borrow {
     private Long id;
 
     @Column
-    private Long user_id;
+    private Long userId;
 
     @Column
-    private Long book_id;
+    private Long bookId;
+
+    @Column
+    private Integer combinationOccurences;
 
     public Long getId() {
         return id;
@@ -25,19 +28,27 @@ public class Borrow {
         this.id = id;
     }
 
-    public Long getBook_id() {
-        return book_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setBook_id(Long book_id) {
-        this.book_id = book_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
+
+    public Integer getCombinationOccurences() {
+        return combinationOccurences;
+    }
+
+    public void setCombinationOccurences(Integer combinationOccurences) {
+        this.combinationOccurences = combinationOccurences;
     }
 }
