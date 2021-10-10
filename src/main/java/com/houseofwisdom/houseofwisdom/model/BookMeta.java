@@ -1,5 +1,7 @@
 package com.houseofwisdom.houseofwisdom.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -18,6 +20,7 @@ public class BookMeta {
     private String publisherName;
 
     @OneToOne(mappedBy = "bookMeta")
+    @JsonBackReference
     private Book book;
 
     public Long getId() {

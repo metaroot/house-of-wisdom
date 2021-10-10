@@ -1,11 +1,13 @@
 package com.houseofwisdom.houseofwisdom.service;
 
+import com.houseofwisdom.houseofwisdom.dto.BookDTO;
 import com.houseofwisdom.houseofwisdom.model.Book;
 import com.houseofwisdom.houseofwisdom.model.User;
 import com.houseofwisdom.houseofwisdom.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,5 +43,15 @@ public class BookServiceImpl implements BookService {
     //Delete
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    //Find by book name
+    public List<Optional<Book>> findByName(String name) {
+        return bookRepository.findByName(name);
+    }
+
+    //Find by author name
+    public List<Optional<Book>> findByAuthorName(String name) {
+        return bookRepository.findByAuthorName(name);
     }
 }

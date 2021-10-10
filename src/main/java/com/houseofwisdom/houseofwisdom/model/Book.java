@@ -1,5 +1,8 @@
 package com.houseofwisdom.houseofwisdom.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,8 +18,9 @@ public class Book {
     private String authorName;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="book_meta_id")
-
+    @JoinColumn(name="book_meta_id", referencedColumnName = "id")
+    @JsonManagedReference
+    @JsonIgnore
     private BookMeta bookMeta;
 
     public Long getId() {

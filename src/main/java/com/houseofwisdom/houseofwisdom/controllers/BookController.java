@@ -1,10 +1,15 @@
 package com.houseofwisdom.houseofwisdom.controllers;
 
+import com.houseofwisdom.houseofwisdom.dto.BookDTO;
 import com.houseofwisdom.houseofwisdom.model.Book;
 import com.houseofwisdom.houseofwisdom.service.BookService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -13,6 +18,9 @@ public class BookController {
     @Autowired
     BookService bookService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @PostMapping("/create")
     public Long createBook(@RequestBody Book book) {
         bookService.saveBook(book);
@@ -20,8 +28,10 @@ public class BookController {
     }
 
     @GetMapping("/get/{id}")
-    public Optional<Book> getBook(@PathVariable Long id) {
-        return bookService.getBook(id);
+    public ResponseEntity<BookDTO> getBook(@PathVariable Long id) {
+        Optional<Book> book = bookService.getBook(id);
+        BookDTO bookDTO = modelMapper.map(book.get(), BookDTO.class);
+        return ResponseEntity.ok().body(bookDTO);
     }
 
     @PutMapping("/update/{id}")
@@ -33,5 +43,28 @@ public class BookController {
     @DeleteMapping("/delete/{id}")
     void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
+    }
+
+    @GetMapping("/search-by-book-name/{name}")
+    public List<BookDTO>findByBookName(@PathVariable String name) {
+        List<Optional<Book>> books = bookService.findByName(name);
+        List<BookDTO> bookDTOs = new ArrayList<>();
+
+        for(Optional<Book> book : books) {
+            bookDTOs.add(modelMapper.map(book.get(), BookDTO.class));
+        }
+
+        return bookDTOs;
+    }
+
+    @GetMapping("/search-by-author-name/{name}")
+    public List<BookDTO>findByAuthorName(@PathVariable String name) {
+        List<Optional<Book>> books = bookService.findByAuthorName(name);
+        List<BookDTO> bookDTOs = new ArrayList<>();
+
+        for(Optional<Book> book : books) {
+            bookDTOs.add(modelMapper.map(book.get(), BookDTO.class));
+        }
+        return bookDTOs;
     }
 }
