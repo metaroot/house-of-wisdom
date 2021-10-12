@@ -25,9 +25,9 @@ public class BorrowController {
         Long borrowId = null;
         try {
             borrowId = borrowService.borrowBook(userId, bookId);
-            logger.info("User id: " + userId.toString() + "borrowed book id: " + bookId.toString());
+            logger.info("User id: " + userId.toString() + " borrowed book id: " + bookId.toString());
         } catch (Exception ex) {
-            logger.info("User id: " + userId.toString() + "couldn't borrow book id: " + bookId.toString());
+            logger.info("User id: " + userId.toString() + " couldn't borrow book id: " + bookId.toString());
             ex.printStackTrace();
         }
         return borrowId;
@@ -38,9 +38,9 @@ public class BorrowController {
                            @RequestParam Long bookId) {
         try {
             borrowService.returnBook(userId, bookId);
-            logger.info("User id: " + userId.toString() + "returned book id: " + bookId.toString());
+            logger.info("User id: " + userId.toString() + " returned book id: " + bookId.toString());
         } catch (Exception ex) {
-            logger.info("User id: " + userId.toString() + "couldn't return book id: " + bookId.toString());
+            logger.info("User id: " + userId.toString() + " couldn't return book id: " + bookId.toString());
             ex.printStackTrace();
         }
 

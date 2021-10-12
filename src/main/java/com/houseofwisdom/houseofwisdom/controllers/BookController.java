@@ -33,15 +33,13 @@ public class BookController {
     public Long createBook(@RequestBody Book book) {
         try {
             bookService.saveBook(book);
-            if(book.getId() == null) {
-                throw new BadRequest400Exception();
-            } else {
+            if(book.getId() != null) {
                 logger.info("New book created successfully with book id: " + book.getId().toString());
             }
 
-        } catch (BadRequest400Exception exception) {
+        } catch (Exception exception) {
             logger.info("Book creation Failed.");
-            exception.handleBadRequest();
+            exception.printStackTrace();
         }
         return book.getId();
     }
