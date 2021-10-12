@@ -1,9 +1,12 @@
 package com.houseofwisdom.houseofwisdom.controllers;
 
+import com.houseofwisdom.houseofwisdom.HouseofwisdomApplication;
 import com.houseofwisdom.houseofwisdom.dto.BookDTO;
 import com.houseofwisdom.houseofwisdom.model.Book;
 import com.houseofwisdom.houseofwisdom.service.BookService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/books")
 public class BookController {
+    private static final Logger logger = LoggerFactory.getLogger(BookController.class);
     @Autowired
     BookService bookService;
 
@@ -24,6 +28,9 @@ public class BookController {
     @PostMapping("/create")
     public Long createBook(@RequestBody Book book) {
         bookService.saveBook(book);
+        if(book.getId() != null) {
+            logger.info("New book Created with book id: " + book.getId());
+        }
         return book.getId();
     }
 

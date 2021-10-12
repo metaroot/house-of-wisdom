@@ -1,5 +1,6 @@
 package com.houseofwisdom.houseofwisdom.service;
 
+import com.houseofwisdom.houseofwisdom.controllers.BookController;
 import com.houseofwisdom.houseofwisdom.dto.BookDTO;
 import com.houseofwisdom.houseofwisdom.model.Book;
 import com.houseofwisdom.houseofwisdom.model.Borrow;
@@ -7,7 +8,10 @@ import com.houseofwisdom.houseofwisdom.model.User;
 import com.houseofwisdom.houseofwisdom.repository.BookRepository;
 import com.houseofwisdom.houseofwisdom.repository.BorrowRepository;
 import com.houseofwisdom.houseofwisdom.utils.HouseOfWisdomConstants;
+import com.houseofwisdom.houseofwisdom.utils.HouseOfWisdomUtilityMethods;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ import java.util.Optional;
 
 @Service
 public class BorrowServiceImpl implements BorrowService{
+    private static final Logger logger = LoggerFactory.getLogger(BorrowServiceImpl.class);
+
     @Autowired
     BorrowRepository borrowRepository;
 
@@ -84,6 +90,12 @@ public class BorrowServiceImpl implements BorrowService{
 
                     user.get().setBooksIssuedToTheUser(booksIssuedToTheUser + 1);
                     userService.updateUser(user.get(), userId);
+
+                    // email sending
+                    boolean status = HouseOfWisdomUtilityMethods.sendMail(user.get().getUserName(), bookId);
+                    if(status) {
+                        logger.info("Mail sent Successfully to user: " + user.get().getUserName());
+                    }
 
                 } else {
                     borrowId = null;
