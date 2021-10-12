@@ -7,6 +7,7 @@ import com.houseofwisdom.houseofwisdom.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.NotActiveException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class BookServiceImpl implements BookService {
 
     //Read
     public Optional<Book> getBook(Long id) {
-        return bookRepository.findById(id);
+        return  bookRepository.findById(id);
     }
 
     //Update

@@ -2,8 +2,12 @@ package com.houseofwisdom.houseofwisdom.controllers;
 
 import com.houseofwisdom.houseofwisdom.HouseofwisdomApplication;
 import com.houseofwisdom.houseofwisdom.dto.BookDTO;
+
+import com.houseofwisdom.houseofwisdom.exceptions.BadRequest400Exception;
+import com.houseofwisdom.houseofwisdom.exceptions.NotFound500Exception;
 import com.houseofwisdom.houseofwisdom.model.Book;
 import com.houseofwisdom.houseofwisdom.service.BookService;
+import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +31,28 @@ public class BookController {
 
     @PostMapping("/create")
     public Long createBook(@RequestBody Book book) {
-        bookService.saveBook(book);
-        if(book.getId() != null) {
-            logger.info("New book Created with book id: " + book.getId());
+        try {
+            bookService.saveBook(book);
+            if(book.getId() == null) {
+                throw new BadRequest400Exception();
+            }
+        } catch (BadRequest400Exception exception) {
+            exception.handleBadRequest();
         }
         return book.getId();
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<BookDTO> getBook(@PathVariable Long id) {
-        Optional<Book> book = bookService.getBook(id);
-        BookDTO bookDTO = modelMapper.map(book.get(), BookDTO.class);
+        BookDTO bookDTO = null;
+        try {
+            Optional<Book> book = bookService.getBook(id);
+            bookDTO = modelMapper.map(book.get(), BookDTO.class);
+
+        } catch (NotFound500Exception exception) {
+            exception.handleNoContent();
+        }
+
         return ResponseEntity.ok().body(bookDTO);
     }
 

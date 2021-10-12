@@ -2,6 +2,7 @@ package com.houseofwisdom.houseofwisdom.controllers;
 
 import com.houseofwisdom.houseofwisdom.dto.BookDTO;
 import com.houseofwisdom.houseofwisdom.dto.UserDTO;
+import com.houseofwisdom.houseofwisdom.exceptions.NotFound500Exception;
 import com.houseofwisdom.houseofwisdom.model.Book;
 import com.houseofwisdom.houseofwisdom.model.User;
 import com.houseofwisdom.houseofwisdom.service.UserService;
@@ -23,14 +24,25 @@ public class UserController {
 
     @PostMapping("/create")
     public Long createUser(@RequestBody User user) {
-        userService.saveUser(user);
+        try {
+            userService.saveUser(user);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         return user.getId();
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-        Optional<User> user = userService.getUser(id);
-        UserDTO userDTO = modelMapper.map(user.get(), UserDTO.class);
+        UserDTO userDTO = null;
+        try {
+            Optional<User> user = userService.getUser(id);
+            userDTO = modelMapper.map(user.get(), UserDTO.class);
+        } catch (NotFound500Exception exception) {
+            exception.handleNoContent();
+        }
+
         return ResponseEntity.ok().body(userDTO);
     }
 
