@@ -51,6 +51,10 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findByName(name);
     }
 
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
     //Find by author name
     public List<Optional<Book>> findByAuthorName(String name) {
         return bookRepository.findByAuthorName(name);

@@ -35,8 +35,12 @@ public class BookController {
             bookService.saveBook(book);
             if(book.getId() == null) {
                 throw new BadRequest400Exception();
+            } else {
+                logger.info("New book created successfully with book id: " + book.getId().toString());
             }
+
         } catch (BadRequest400Exception exception) {
+            logger.info("Book creation Failed.");
             exception.handleBadRequest();
         }
         return book.getId();
@@ -48,32 +52,69 @@ public class BookController {
         try {
             Optional<Book> book = bookService.getBook(id);
             bookDTO = modelMapper.map(book.get(), BookDTO.class);
-
+            if(book.get().getId() != null) {
+                logger.info("Book Info fetched successfully");
+            }
         } catch (NotFound500Exception exception) {
+            logger.info("Couldn't fetch book info");
             exception.handleNoContent();
         }
 
         return ResponseEntity.ok().body(bookDTO);
     }
 
+    @GetMapping("/all")
+    public List<BookDTO> getAllBooks() {
+        List<BookDTO> bookDTOS = new ArrayList<>();
+        try {
+            List<Book> books = bookService.getAllBooks();
+            for(Book book : books) {
+                bookDTOS.add(modelMapper.map(book, BookDTO.class));
+            }
+            logger.info("List of books fetched Successfully");
+        } catch (Exception ex) {
+            logger.info("Couldn't fetch book list data");
+            ex.printStackTrace();
+        }
+        return bookDTOS;
+    }
+
     @PutMapping("/update/{id}")
     public Book updateBook(@RequestBody Book book,
                            @PathVariable Long id) {
-        return bookService.updateBook(book, id);
+        Book updatedBook = new Book();
+        try {
+            updatedBook = bookService.updateBook(book, id);
+            logger.info("Updated book info with book id: " + id.toString());
+        } catch (Exception ex) {
+            logger.info("Couldn't update book info with book id: " + id.toString());
+        }
+        return updatedBook;
     }
 
     @DeleteMapping("/delete/{id}")
     void deleteBook(@PathVariable Long id) {
-        bookService.deleteBook(id);
+        try {
+            bookService.deleteBook(id);
+            logger.info("Book deleted with id: " + id.toString());
+        } catch (Exception ex) {
+            logger.info("Couldn't delete the book with id: " + id.toString());
+        }
     }
 
     @GetMapping("/search-by-book-name/{name}")
     public List<BookDTO>findByBookName(@PathVariable String name) {
-        List<Optional<Book>> books = bookService.findByName(name);
         List<BookDTO> bookDTOs = new ArrayList<>();
+        try {
+            List<Optional<Book>> books = bookService.findByName(name);
 
-        for(Optional<Book> book : books) {
-            bookDTOs.add(modelMapper.map(book.get(), BookDTO.class));
+            for(Optional<Book> book : books) {
+                bookDTOs.add(modelMapper.map(book.get(), BookDTO.class));
+            }
+            logger.info("Searching by book name done successfully.");
+        } catch (Exception ex) {
+            logger.info("Searching by author name failed");
+            ex.printStackTrace();
         }
 
         return bookDTOs;
@@ -81,12 +122,19 @@ public class BookController {
 
     @GetMapping("/search-by-author-name/{name}")
     public List<BookDTO>findByAuthorName(@PathVariable String name) {
-        List<Optional<Book>> books = bookService.findByAuthorName(name);
         List<BookDTO> bookDTOs = new ArrayList<>();
+        try {
+            List<Optional<Book>> books = bookService.findByAuthorName(name);
 
-        for(Optional<Book> book : books) {
-            bookDTOs.add(modelMapper.map(book.get(), BookDTO.class));
+            for(Optional<Book> book : books) {
+                bookDTOs.add(modelMapper.map(book.get(), BookDTO.class));
+            }
+            logger.info("Seaching by author name done successfully.");
+        } catch (Exception ex) {
+            logger.info("Searching by autho name failed.");
+            ex.printStackTrace();
         }
+
         return bookDTOs;
     }
 }
