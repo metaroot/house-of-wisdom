@@ -26,8 +26,8 @@ jobs:
           java-version: 1.8
       - name: Maven Package
         run: mvn test -Dtest=UserControllerTests,BookControllerTests
-  artifact:
-    name: Publish Artifact
+  build:
+    name: Build Application
     runs-on: ubuntu-latest
     needs: [test]
     steps:
@@ -37,13 +37,13 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish artifact on GitHub Packages
-        run: mvn -B clean deploy -DskipTests
+        run: mvn compile
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN  }}
   docker:
     name: Publish Docker Image
     runs-on: ubuntu-latest
-    needs: [test,artifact]
+    needs: [test,build]
     env:
       REPO: ${{  secrets.DOCKER_REPO  }}
     steps:
