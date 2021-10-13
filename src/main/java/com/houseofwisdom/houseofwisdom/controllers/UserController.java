@@ -31,7 +31,7 @@ public class UserController {
     public Long createUser(@RequestBody User user) {
         try {
             userService.saveUser(user);
-            logger.info("User created with id " + user.getId().toString());
+            logger.info("User created with");
         } catch (Exception ex) {
             logger.info("Failed to create user");
             ex.printStackTrace();
