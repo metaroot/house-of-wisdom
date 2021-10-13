@@ -15,11 +15,8 @@
 	<description>House of Wisdom, A Library management system</description>
 	<distributionManagement>
 		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>corp1</id>
-			<name>Corporate Repository</name>
-			<url>file:///home/myfolder/.m2</url>
-			<layout>default</layout>
+			<id>house-of-wisdom</id>
+			<url>http://central_nexus/server</url>
 		</repository>
 	</distributionManagement>
 
